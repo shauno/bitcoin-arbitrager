@@ -12,5 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return 'Not implemented yet :(';
 });
+
+//@TODO, this should be POST
+Route::get('/arbitrage', [ 'uses' => 'ActionController@arbitrage' ]);
