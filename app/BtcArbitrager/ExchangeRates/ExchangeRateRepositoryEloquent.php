@@ -8,15 +8,22 @@ use Illuminate\Support\Collection;
 class ExchangeRateRepositoryEloquent implements ExchangeRateRepository
 {
     /**
-     * Find all exchange rates with the $from_iso
-     *
-     * @param string $from_iso
-     * @return Collection|ExchangeRate[]
+     * @inheritdoc
      */
     public function findFromIso(string $from_iso) : Collection
     {
         return (new ExchangeRate())
             ->where('from_iso', $from_iso)
+            ->get();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findToIso(string $to_iso): Collection
+    {
+        return (new ExchangeRate())
+            ->where('to_iso', $to_iso)
             ->get();
     }
 }

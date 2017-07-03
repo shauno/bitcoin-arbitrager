@@ -11,9 +11,9 @@ class ActionController extends Controller
 {
     public function arbitrage(ExchangeRateFetcher $fetcher, ExchangeRateRepository $exchangeRateRepository)
     {
-        $buy_rates = $exchangeRateRepository->findFromIso('XBT');
+        $buy_rates_list = $exchangeRateRepository->findFromIso('XBT');
 
-        $rates = $buy_rates->mapWithKeys(function(ExchangeRate $rate) use($fetcher) {
+        $buy_rate = $buy_rates_list->mapWithKeys(function(ExchangeRate $rate) use($fetcher) {
             $content = $fetcher->get($rate->getTrackerUrl());
 
             $parser   = '\BtcArbitrager\Parsers\\' . $rate->getParser();
@@ -23,6 +23,16 @@ class ActionController extends Controller
             return [$rate->getId() => $costRate];
         });
 
-        dd($rates);
+        $sell_rates_list = $exchangeRateRepository->findToIso('XBT');
+
+        $sell_rate = $sell_rates_list->mapWithKeys(function(ExchangeRate $rate) use($fetcher) {
+            $content = $fetcher->get($rate->getTrackerUrl());
+
+            $parser   = '\BtcArbitrager\Parsers\\' . $rate->getParser();
+            $parser   = new $parser($content, 8);
+            $costRate = $parser->value();
+
+            return [$rate->getId() => $costRate];
+        });
     }
 }
