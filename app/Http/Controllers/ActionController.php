@@ -34,5 +34,13 @@ class ActionController extends Controller
 
             return [$rate->getId() => $costRate];
         });
+        
+        //calculate the % difference between cheap (offshore) and expensive (local)
+        $diff = $sell_rate->max() - $buy_rate->min();
+
+        //return the % difference between the rates
+        $arbitrage = $diff / $sell_rate->max();
+
+        dd($arbitrage);
     }
 }
