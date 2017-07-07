@@ -2,6 +2,7 @@
 
 namespace BtcArbitrager\ExchangeRates;
 
+use App\CurrentRate;
 use App\ExchangeRate;
 use Illuminate\Support\Collection;
 
@@ -22,4 +23,11 @@ interface ExchangeRateRepository
      * @return Collection|ExchangeRate[]
      */
     public function findToIso(string $to_iso) : Collection;
+
+    /**
+     * @param ExchangeRate $exchangeRate
+     * @param float $rate
+     * @return CurrentRate
+     */
+    public function addCurrentRate(ExchangeRate $exchangeRate, float $rate) : CurrentRate;
 }

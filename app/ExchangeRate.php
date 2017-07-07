@@ -9,10 +9,35 @@ use Illuminate\Database\Eloquent\Model;
  * @property int id
  * @property string tracker_url
  * @property string parser
+ * @property Exchange exchange
  * @package App
  */
 class ExchangeRate extends Model
 {
+    /**
+     * Relationships
+     */
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function exchange()
+    {
+        return $this->belongsTo(Exchange::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function currenctRate()
+    {
+        return $this->hasMany(CurrentRate::class);
+    }
+
+    /**
+     *  Getters
+     */
+
     /**
      * @return int
      */
@@ -35,5 +60,13 @@ class ExchangeRate extends Model
     public function getParser() : string
     {
         return $this->parser;
+    }
+
+    /**
+     * @return Exchange
+     */
+    public function getExchange() : Exchange
+    {
+        return $this->exchange;
     }
 }

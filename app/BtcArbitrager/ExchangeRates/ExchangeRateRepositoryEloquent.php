@@ -2,6 +2,7 @@
 
 namespace BtcArbitrager\ExchangeRates;
 
+use App\CurrentRate;
 use App\ExchangeRate;
 use Illuminate\Support\Collection;
 
@@ -25,5 +26,15 @@ class ExchangeRateRepositoryEloquent implements ExchangeRateRepository
         return (new ExchangeRate())
             ->where('to_iso', $to_iso)
             ->get();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addCurrentRate(ExchangeRate $exchangeRate, float $rate) : CurrentRate
+    {
+        return $exchangeRate->currenctRate()->create([
+            'rate' => $rate,
+        ]);
     }
 }

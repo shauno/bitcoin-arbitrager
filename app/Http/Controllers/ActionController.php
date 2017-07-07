@@ -13,26 +13,30 @@ class ActionController extends Controller
     {
         $buy_rates_list = $exchangeRateRepository->findFromIso('XBT');
 
-        $buy_rate = $buy_rates_list->mapWithKeys(function(ExchangeRate $rate) use($fetcher) {
-            $content = $fetcher->get($rate->getTrackerUrl());
+        $buy_rate = $buy_rates_list->mapWithKeys(function(ExchangeRate $exchangeRate) use($fetcher, $exchangeRateRepository) {
+            $content = $fetcher->get($exchangeRate->getTrackerUrl());
 
-            $parser   = '\BtcArbitrager\Parsers\\' . $rate->getParser();
+            $parser   = '\BtcArbitrager\Parsers\\' . $exchangeRate->getParser();
             $parser   = new $parser($content, 200);
-            $costRate = $parser->value();
+            $rate = $parser->value();
 
-            return [$rate->getId() => $costRate];
+            $exchangeRateRepository->addCurrentRate($exchangeRate, $rate);
+
+            return [$exchangeRate->getId() => $rate];
         });
 
         $sell_rates_list = $exchangeRateRepository->findToIso('XBT');
 
-        $sell_rate = $sell_rates_list->mapWithKeys(function(ExchangeRate $rate) use($fetcher) {
-            $content = $fetcher->get($rate->getTrackerUrl());
+        $sell_rate = $sell_rates_list->mapWithKeys(function(ExchangeRate $exchangeRate) use($fetcher, $exchangeRateRepository) {
+            $content = $fetcher->get($exchangeRate->getTrackerUrl());
 
-            $parser   = '\BtcArbitrager\Parsers\\' . $rate->getParser();
-            $parser   = new $parser($content, 8);
-            $costRate = $parser->value();
+            $parser   = '\BtcArbitrager\Parsers\\' . $exchangeRate->getParser();
+            $parser   = new $parser($content, 0.05); //todo, calc the amount to actually buy
+            $rate = $parser->value();
 
-            return [$rate->getId() => $costRate];
+            $exchangeRateRepository->addCurrentRate($exchangeRate, $rate);
+
+            return [$exchangeRate->getId() => $rate];
         });
         
         //calculate the % difference between cheap (offshore) and expensive (local)
