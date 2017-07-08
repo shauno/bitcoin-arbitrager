@@ -69,4 +69,14 @@ class ExchangeRate extends Model
     {
         return $this->exchange;
     }
+
+    /**
+     * Get the latest CurrentRate
+     *
+     * @return CurrentRate
+     */
+    public function getCurrentRate()
+    {
+        return $this->currenctRate()->orderBy('id', 'desc')->first();
+    }
 }
