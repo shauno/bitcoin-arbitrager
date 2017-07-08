@@ -29,7 +29,7 @@ class ExchangeRate extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function currenctRate()
+    public function currentRate()
     {
         return $this->hasMany(CurrentRate::class);
     }
@@ -77,6 +77,6 @@ class ExchangeRate extends Model
      */
     public function getCurrentRate()
     {
-        return $this->currenctRate()->orderBy('id', 'desc')->first();
+        return $this->currentRate()->orderBy('id', 'desc')->first();
     }
 }

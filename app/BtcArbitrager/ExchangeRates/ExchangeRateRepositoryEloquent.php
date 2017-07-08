@@ -33,7 +33,7 @@ class ExchangeRateRepositoryEloquent implements ExchangeRateRepository
      */
     public function addCurrentRate(ExchangeRate $exchangeRate, float $rate) : CurrentRate
     {
-        return $exchangeRate->currenctRate()->create([
+        return $exchangeRate->currentRate()->create([
             'rate' => $rate,
         ]);
     }
