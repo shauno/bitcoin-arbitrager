@@ -40,14 +40,17 @@ class ActionController extends Controller
             return $exchangeRate;
         });
 
-        //calculate the % difference between cheap (offshore) and expensive (local)
+        //Arbitrage calc
         $diff = $sell_rates->max('sort_rate') - $buy_rates->min('sort_rate');
-
-        //return the % difference between the rates
         $arbitrage = $diff / $sell_rates->max('sort_rate');
 
         if ($arbitrage >= 0.004) {
             Mail::to(env('MAIL_NOTIFICATION'))->send(new ArbitrageNotification($buy_rates, $sell_rates));
         }
+
+        return view('emails.arbitrage-notification')
+            ->with('buy', $buy_rates)
+            ->with('sell', $sell_rates)
+            ->with('arbitrage', $arbitrage);
     }
 }

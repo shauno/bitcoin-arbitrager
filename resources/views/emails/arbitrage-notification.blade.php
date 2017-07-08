@@ -6,7 +6,8 @@
 ?>
 
 <b>Best Buy:</b> {{ number_format($buy->min('sort_rate')) }}<br />
-<b>Best Sell:</b> {{ number_format($sell->max('sort_rate')) }}
+<b>Best Sell:</b> {{ number_format($sell->max('sort_rate')) }}<br />
+<b>Arbitrage</b> {{ $arbitrage * 100 }}
 <hr />
 
 <h3>Buy Rates</h3>

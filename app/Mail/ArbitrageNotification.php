@@ -40,11 +40,16 @@ class ArbitrageNotification extends Mailable
      */
     public function build()
     {
+        //Arbitrage calc
+        $diff = $this->sell->max('sort_rate') - $this->buy->min('sort_rate');
+        $arbitrage = $diff / $this->sell->max('sort_rate');
+
         return $this->from('arbitrage@shauno.co.za')
                     ->view('emails.arbitrage-notification')
                     ->with([
                         'buy' => $this->buy,
                         'sell' => $this->sell,
+                        'arbitrage' => $arbitrage,
                     ]);
     }
 }
