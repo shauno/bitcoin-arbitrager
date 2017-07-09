@@ -44,7 +44,7 @@ class ActionController extends Controller
         $diff = $sell_rates->max('sort_rate') - $buy_rates->min('sort_rate');
         $arbitrage = $diff / $sell_rates->max('sort_rate');
 
-        if ($arbitrage >= 0.004) {
+        if ($arbitrage >= 0.04) {
             Mail::to(env('MAIL_NOTIFICATION'))->send(new ArbitrageNotification($buy_rates, $sell_rates));
         }
 
