@@ -11,9 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return 'Not implemented yet :(';
-});
+Route::get('/', [ 'uses' => 'PageController@homepage']);
 
 //@TODO, this should be POST
 Route::get('/arbitrage', [ 'uses' => 'ActionController@arbitrage' ]);
+
+Route::prefix('/api/v1')->group(function() {
+    Route::get('current-rates', [ 'uses' => 'CurrentRateController@index']);
+});

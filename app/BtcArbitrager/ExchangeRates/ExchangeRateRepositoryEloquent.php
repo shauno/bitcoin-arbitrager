@@ -11,20 +11,33 @@ class ExchangeRateRepositoryEloquent implements ExchangeRateRepository
     /**
      * @inheritdoc
      */
-    public function findFromIso(string $from_iso) : Collection
+    public function findFromIso(string $fromIso) : Collection
     {
         return (new ExchangeRate())
-            ->where('from_iso', $from_iso)
+            ->where('from_iso', $fromIso)
             ->get();
     }
 
     /**
      * @inheritdoc
      */
-    public function findToIso(string $to_iso): Collection
+    public function findToIso(string $toIso): Collection
     {
         return (new ExchangeRate())
-            ->where('to_iso', $to_iso)
+            ->where('to_iso', $toIso)
+            ->get();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findFromDate(\DateTime $from)
+    {
+        return (new ExchangeRate())
+            ->with(['CurrentRate' => function($query) use ($from) {
+                $query->where('created_at', '>=', $from->format('Y-m-d H:i:s'));
+            }])
+            ->with('Exchange')
             ->get();
     }
 

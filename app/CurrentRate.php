@@ -29,4 +29,17 @@ class CurrentRate extends Model
     /**
      * Getters
      */
+
+    /**
+     * Accessors
+     */
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($value)
+    {
+        return date('Y-m-d H:i', strtotime($value));
+    }
 }
