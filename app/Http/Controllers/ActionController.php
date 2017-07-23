@@ -13,12 +13,13 @@ class ActionController extends Controller
 {
     public function arbitrage(ExchangeRateFetcher $fetcher, ExchangeRateRepository $exchangeRateRepository)
     {
+        $zarToSpend = 200;
         //TODO, DRY this up, move it out of controller
-        $buy_rates = $exchangeRateRepository->findFromIso('XBT')->map(function(ExchangeRate $exchangeRate) use($fetcher, $exchangeRateRepository) {
+        $buy_rates = $exchangeRateRepository->findFromIso('XBT')->map(function(ExchangeRate $exchangeRate) use($fetcher, $exchangeRateRepository, $zarToSpend) {
             $content = $fetcher->get($exchangeRate->getTrackerUrl());
 
             $parser   = '\BtcArbitrager\Parsers\\' . $exchangeRate->getParser();
-            $parser   = new $parser($content, 200);
+            $parser   = new $parser($content, $zarToSpend);
             $rate = $parser->value();
 
             $exchangeRateRepository->addCurrentRate($exchangeRate, $rate);
@@ -27,11 +28,13 @@ class ActionController extends Controller
             return $exchangeRate;
         });
 
-        $sell_rates = $exchangeRateRepository->findToIso('XBT')->map(function(ExchangeRate $exchangeRate) use($fetcher, $exchangeRateRepository) {
+        $btcToBuy = round($zarToSpend / $buy_rates->min('sort_rate'), 8);
+
+        $sell_rates = $exchangeRateRepository->findToIso('XBT')->map(function(ExchangeRate $exchangeRate) use($fetcher, $exchangeRateRepository, $btcToBuy) {
             $content = $fetcher->get($exchangeRate->getTrackerUrl());
 
             $parser   = '\BtcArbitrager\Parsers\\' . $exchangeRate->getParser();
-            $parser   = new $parser($content, 0.05); //todo, calc the amount to actually buy
+            $parser   = new $parser($content, $btcToBuy);
             $rate = $parser->value();
 
             $exchangeRateRepository->addCurrentRate($exchangeRate, $rate);
