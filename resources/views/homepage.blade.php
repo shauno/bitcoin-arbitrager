@@ -65,8 +65,8 @@
                     data: rates, //we can't convert it to array yet because we might not have all the label keys yet
                     fill: false,
                     borderDash: [5, dash],
-                    borderColor: '#216C2A', //todo, exchange related colours
-                    backgroundColor: '#216C2A'
+                    borderColor: data[exchange].exchange.id % 2 == 0 ? '#AAA524' : '#23266c', //todo, add to exchange_rate model
+                    backgroundColor: data[exchange].exchange.id % 2 == 0 ? '#AAA524' : '#23266c'
                 };
             }
 
